@@ -1,30 +1,54 @@
-# MangementLearningPlatform
 
-# WPF Management Learning and Job Management Platform
+# Learning and Job Management Platform
 
 Welcome to the WPF Management Learning and Job Management Platform. This platform is designed to enhance your learning experience and manage jobs efficiently.
 
-## About
+## Table of Contents
 
-This platform offers a unique experience for management learning while providing powerful tools for job management. Our WPF platform is rich with functionalities that makes learning management concepts seamless and managing jobs a breeze.
+- [About The Project](#about-the-project)
+- [Screenshoots](#about-the-project)
+- [Built With](#built-with)
+- [Status](#status)
+- [License](#license)
+- [Contact](#contact)
+- [Demos](#demos)
 
-![Platform Overview Screenshot](<path_to_image>)
+## About The Project
 
-## Features
 
-### Management Learning
+Learning/Job Management System (LMS/JMS) is a real-time tool to manage and visualize the status of the courses and jobs for both teachers and students based on dynamicly created data from databases. Some blue text.
 
-This is the ultimate place for learning management principles. We have interactive lessons, quizzes, and assessments to make learning effective and engaging.
+## Screenshoots
 
-![Management Learning Screenshot](<path_to_image>)
+![Platform Overview Screenshot](https://github.com/SaintAngeLs/ManagementLearningPlatform/blob/master/Screen/login.png)
 
-### Job Management
+![Platform Overview Screenshot](https://github.com/SaintAngeLs/ManagementLearningPlatform/blob/master/Screen/courses.png)
 
-Manage jobs with a few clicks. Create, update, delete, and track jobs effortlessly with our job management tool.
+![Platform Overview Screenshot](https://github.com/SaintAngeLs/ManagementLearningPlatform/blob/master/Screen/home.png)
 
-![Job Management Screenshot](<path_to_image>)
 
-## Getting Started
+## Built With
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes....
+
+- Language: C#
+- Framework: .NET Framework 4.7.5
+- Windows Presentation Foundation(WPF)
+- Microsoft SQL server: 2019.0150.2000.05
+- LiveCharts
+- MVVM mode, Dependency injection, Customized user controls
+- Asynchronous operations: Task, await/async
+- Embedded multiple interfaces with databases
+- Scalable Framework and Stable Performance
+
+## Status
+
+Main framework is available to use. Other features will come soon.
+
+## License
+
+This project is licensed under the Mozila License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Contact
+
+If you have any questions, please feel free to contact .
 
