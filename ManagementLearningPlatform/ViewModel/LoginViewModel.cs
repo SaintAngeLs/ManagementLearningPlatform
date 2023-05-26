@@ -1,0 +1,138 @@
+﻿using ManagementSystemForCourses.Common;
+using ManagementSystemForCourses.Controls;
+using ManagementSystemForCourses.DataAccess;
+using ManagementSystemForCourses.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+
+namespace ManagementSystemForCourses.ViewModel
+{
+    public class LoginViewModel: NotifyBase
+    {
+        // Define properties for login model, commands, error message, and progress visibility
+        public LoginModel LoginModel { get; set; } = new LoginModel();
+        public CommandBase CloseWindowCommand { get; set; }
+        public CommandBase LoginCommand { get; set; }
+
+        //public ValidationCodeGenerator ValidCoder { get; set; }
+
+        private string errorMessage;
+        public string ErrorMessage
+        {
+            get { return errorMessage; }
+
+            set { errorMessage = value; this.DoNotify(); }
+        }
+        private Visibility showProgress = Visibility.Collapsed;
+        public Visibility ShowProgress
+        {
+            get { return showProgress; }
+
+            set
+            {
+                showProgress = value;
+                this.DoNotify();
+                LoginCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public LoginViewModel()
+        {
+            // Initialize login model and commands
+            this.LoginModel = new LoginModel();
+            this.CloseWindowCommand = new CommandBase();
+            this.CloseWindowCommand.DoExecute = new Action<object>((o) =>
+            {
+                (o as Window).Close();
+            });
+            this.CloseWindowCommand.DoCanExecute = new Func<object, bool>((o) => { return true; });
+
+            this.LoginCommand = new CommandBase();
+            this.LoginCommand.DoExecute = new Action<object>(DoLogin);
+            this.LoginCommand.DoCanExecute = new Func<object, bool>((o) => { return ShowProgress == Visibility.Collapsed; });
+
+            // UpdateValidationCode();
+        }
+
+        public void UpdateValidationCode(int codeLength, int width, int height)
+        {
+            // Update validation code and its corresponding image
+            LoginModel.ValidationCode = ValidationCoder.CreateCode(codeLength);
+            if (!string.IsNullOrEmpty(LoginModel.ValidationCode))
+            {
+                LoginModel.ValidationCodeSource = ValidationCoder.CreateValidationCodeImage(LoginModel.ValidationCode, width, height);
+            }
+        }
+
+        //login logic Validation
+        private void DoLogin(object o) 
+        { 
+            this.ShowProgress = Visibility.Visible;
+            this.ErrorMessage = "";
+            if (string.IsNullOrEmpty(LoginModel.Username))
+            {
+                this.ErrorMessage = "Please Enter User Name!";
+                this.ShowProgress = Visibility.Collapsed;
+                return;
+            }
+
+            if (string.IsNullOrEmpty(LoginModel.Password))
+            {
+                this.ErrorMessage = "Please Enter Password!";
+                this.ShowProgress = Visibility.Collapsed;
+                return;
+            }
+            //validation code section
+
+            //if (string.IsNullOrEmpty(LoginModel.ValidataionInputCode))
+            //{
+            //    this.ErrorMessage = "Please Enter Validation Code!";
+            //    this.ShowProgress = Visibility.Collapsed;
+            //    return;
+            //}
+
+            //if (LoginModel.ValidataionInputCode.Length < 4 || 
+            //    LoginModel.ValidataionInputCode != LoginModel.ValidationCode.ToLower())
+            //{
+            //    this.ErrorMessage = "Incorrect Validation Code!";
+            //    this.ShowProgress = Visibility.Collapsed;
+            //    return;
+            //}
+
+
+            Task.Run(new Action(() =>
+            {
+                try
+                {
+                    var user = LocalDataAccess.GetInstance().CheckUserInfo(LoginModel.Username, LoginModel.Password);
+                    if (user == null)
+                    {
+                        throw new Exception("Login Failed! User Name or Password is incorrect!");
+                    }
+
+                    ////Store DB info into a global variable
+                    GlobalValues.UserInfo = user;
+
+                    ////click login button, then commandparameter will execute and jump to main window
+                    ////then, program will execute App.xaml.cs
+                    
+                    Application.Current.Dispatcher.Invoke(new Action(() => 
+                    { 
+                        (o as Window).DialogResult = true; 
+                    }));
+                }
+                catch (Exception ex)
+                {
+                    this.ErrorMessage = ex.Message;
+                }
+            }));
+        }
+
+
+    }
+}

@@ -1,0 +1,264 @@
+﻿<Window x:Class="ManagementSystemForCourses.View.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ManagementSystemForCourses"
+        xmlns:converter="clr-namespace:ManagementSystemForCourses.Converter"
+        mc:Ignorable="d"
+        Title="ZHANG's" Height="800" Width="1250"
+        FontFamily="Microsoft YaHei" FontWeight="ExtraLight" FontSize="12"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" AllowsTransparency="True" Background="{x:Null}">
+    <Window.Resources>
+        <ResourceDictionary>
+
+            <SolidColorBrush x:Key="MainWindowBackgroundBrushColorLogoText" Color="#486499"/>
+            <SolidColorBrush x:Key="MainWindowLogoBackgorudEffect" Color="#384E79"/>
+            <Color x:Key="ColorMainWindowLogoBackgorudEffect">#384E79</Color>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Assets/Styles/DefaultStyle.xaml"/>
+                <!-- Merge resource dictionaries here -->
+
+                <ResourceDictionary>
+                    <!-- Define resources here -->
+                    <converter:GenderConverter x:Key="genderConverter" />
+
+                    <Style TargetType="RadioButton" x:Key="NavButtonStyle" >
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="RadioButton">
+                                    <Border Background="Transparent" CornerRadius="8" Name="back2">
+                                        <ContentControl Content="{TemplateBinding Content}" 
+                                                        VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                        Margin="20,4" FontSize="14"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="back2" Property="Background" Value="#44FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+                    <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+                    <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+                    <ControlTemplate TargetType="{x:Type TextBox}" x:Key="SearchTextBoxTemplate">
+                        <Border x:Name="border"
+                        BorderThickness="0" Background="#22000000" SnapsToDevicePixels="True"
+                        CornerRadius="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="&#xe603;" FontFamily="../Assets/Fonts/#iconfont"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Foreground="#44FFFFFF" FontSize="16"/>
+                                <!--water mark-->
+                                <TextBlock Text=" Search for what you like..."  Grid.Column="1" VerticalAlignment="Center" 
+                                   Foreground="#44FFFFFF" Name="mt" Visibility="Collapsed"/>
+                                <ScrollViewer x:Name="PART_ContentHost" Grid.Column="1" Focusable="false" 
+                                  HorizontalScrollBarVisibility="Hidden" 
+                                  VerticalScrollBarVisibility="Hidden"
+                                  VerticalAlignment="Center" Background="Transparent"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                            <!--hide the water mark when no data in search box-->
+                            <DataTrigger Binding="{Binding Text,RelativeSource={RelativeSource Mode=Self}}" Value="">
+                                <Setter TargetName="mt" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+
+                    <Storyboard x:Key="UserInfoStoryBoard">
+                        <DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetName="tt" Storyboard.TargetProperty="X"/>
+                    </Storyboard>
+                    <Storyboard x:Key="CloseUserInfoStoryBoard">
+                        <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetName="tt" Storyboard.TargetProperty="X"/>
+                    </Storyboard>
+
+                    <ControlTemplate TargetType="RadioButton" x:Key="GenderRadioButtonTemplate">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Border Width="14" Height="14" BorderThickness="1" BorderBrush="#007DFA" Background="White" Margin="5,0">
+                                <Border Width="8" Height="8" CornerRadius="4" Background="#007DFA" Name="point" Visibility="Collapsed"/>
+                            </Border>
+                            <ContentControl Content="{TemplateBinding Content}" VerticalAlignment="Center" Grid.Column="1"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Visibility" Value="Visible" TargetName="point"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.Triggers>
+
+        <EventTrigger RoutedEvent="Button.Click" SourceName="btnUserInfo">
+            <BeginStoryboard Storyboard="{StaticResource UserInfoStoryBoard}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Button.Click" SourceName="btnCloseUserInfo">
+            <BeginStoryboard Storyboard="{StaticResource CloseUserInfoStoryBoard}"/>
+        </EventTrigger>
+
+    </Window.Triggers>
+
+    <!-- Window Layout -->
+    <Border Background="#F7F9FA" CornerRadius="10" Margin="0,0,0,20">
+        <Border.Effect>
+            <DropShadowEffect Color="Gray" ShadowDepth="0" BlurRadius="5" Opacity="0.3" />
+        </Border.Effect>
+
+        <Grid>
+            <Border Background="#486499" Height="200" VerticalAlignment="Top" CornerRadius="10"
+                    MouseLeftButtonDown="Border_MouseLeftButtonDown" HorizontalAlignment="Right" Width="1250"/>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <Button Style="{StaticResource WindowControlButtonStyle}"
+                        Content="&#xeffb;" Click="buttonMin_Click"/>
+                <Button Style="{StaticResource WindowControlButtonStyle}"
+                         Content="&#xe60c;" Click="buttonMax_Click"/>
+                <Button Style="{StaticResource WindowControlButtonStyle}"
+                        Content="&#xe602;" Click="buttonClose_Click"/>
+            </StackPanel>
+
+            <Grid Margin="50,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Height="60" Width="432">
+                    <Image Source="../Assets/Images/logo.png" Width="60" Height="60"  />
+                    <StackPanel VerticalAlignment="Center"  Margin="15,0,0,0">
+                        <TextBlock Text="LEARNING MANAGEMENT SYSTEM" Foreground="White"
+                                   FontSize="20" FontWeight="Heavy"
+                                   />
+                        <TextBlock Text="Study and Work Manage"  Foreground="#e9eef7" FontSize="10" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Height="50" Margin="1090,0,0,0" Width="60">
+                    <Border Width="50" Height="50" CornerRadius="15" >
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding UserInfo.Avatar}"/>
+                        </Border.Background>
+                    </Border>
+                    <Button VerticalAlignment="Center" Foreground="White" Margin="10,0,0,0"
+                            Cursor="Hand" Name="btnUserInfo">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <TextBlock Text="{Binding UserInfo.UserName}"/>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Height="26" Width="618">
+                    <!-- Add navigation buttons -->
+                    <RadioButton Content="Home" Style="{StaticResource NavButtonStyle}" IsChecked="True"
+                                 Command="{Binding NavChangedCommand}"
+                                 CommandParameter="FirstPageView"/>
+                    <RadioButton Content="My Courses" Style="{StaticResource NavButtonStyle}"
+                                 Command="{Binding NavChangedCommand}"
+                                 CommandParameter="CoursePageView"/>
+                    <RadioButton Content="Course Center"  Style="{StaticResource NavButtonStyle}"/>
+                    
+                    <RadioButton Content="Job Opportunities" Style="{StaticResource NavButtonStyle}" />
+                    <RadioButton Content="About" Style="{StaticResource NavButtonStyle}"/>
+                </StackPanel>
+
+                <TextBox Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                         Width="300" Height="32"  Text="{Binding SearchText}"
+                         Template="{StaticResource SearchTextBoxTemplate}" 
+                         Foreground="White"  Margin="846,0,0,0"/>
+
+                <ContentControl Grid.Row="2" Content="{Binding MainContent}"/>
+
+
+            </Grid>
+
+            <!--Info slide bar-->
+            <Border Background="#EE444444" Width="240" HorizontalAlignment="Right" CornerRadius="0,5,5,0">
+                <Border.Effect>
+                    <DropShadowEffect Color="Gray" ShadowDepth="0" BlurRadius="5" Opacity="0.3" />
+                </Border.Effect>
+                <Border.RenderTransform>
+                    <TranslateTransform X="250" x:Name="tt"/>
+                </Border.RenderTransform>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="230"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Width="40" Height="40" BorderThickness="0" Content="&#xe602;" FontFamily="../Assets/Fonts/#iconfont"
+                    VerticalAlignment="Top" HorizontalAlignment="Left" Name="btnCloseUserInfo"/>
+                    <Border Width="80" Height="80" CornerRadius="40">
+                        <Border.Effect>
+                            <DropShadowEffect Color="White" ShadowDepth="0" BlurRadius="5" Opacity="1" Direction="0" />
+                        </Border.Effect>
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding UserInfo.Avatar}"/>
+                        </Border.Background>
+                    </Border>
+
+                    <Grid Grid.Row="1" Margin="20,0">
+                        <Grid.Resources>
+                            <Style TargetType="RadioButton">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Horizontal"  VerticalAlignment="Center">
+                            <TextBlock Text="username"/>
+                            <TextBlock Text="{Binding UserInfo.UserName}" Margin="10,0,0,0" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1"  VerticalAlignment="Center">
+                            <TextBlock Text="Gender"/>
+                            <RadioButton Content="M" Margin="10,0,0,0" Template="{StaticResource GenderRadioButtonTemplate}" 
+                                         IsChecked="{Binding UserInfo.Gender, Converter={StaticResource genderConverter}, ConverterParameter=1}"/>
+                            <RadioButton Content="F" Margin="10,0,0,0" Template="{StaticResource GenderRadioButtonTemplate}"
+                                         IsChecked="{Binding UserInfo.Gender, Converter={StaticResource genderConverter}, ConverterParameter=2}"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+            </Border>
+        </Grid>
+    </Border>
+</Window>
